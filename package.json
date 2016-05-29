@@ -1,0 +1,38 @@
+{
+  "name": "labbable",
+  "version": "0.0.0",
+  "description": "",
+  "main": "lib/index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "lab -a code -t 100 -L",
+    "coveralls": "lab -r lcov | coveralls"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/devinivy/labbable.git"
+  },
+  "keywords": [
+    "hapi",
+    "server",
+    "test",
+    "testing",
+    "utility"
+  ],
+  "author": "Devin Ivy <devin@bigroomstudios.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/devinivy/labbable/issues"
+  },
+  "homepage": "https://github.com/devinivy/labbable#readme",
+  "peerDependencies": {
+    "hapi": ">=10 <14"
+  },
+  "devDependencies": {
+    "code": "3.x.x",
+    "hapi": "13.x.x",
+    "lab": "10.x.x"
+  }
+}

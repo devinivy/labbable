@@ -94,6 +94,10 @@ describe('Labbable', () => {
 
             labbable.ready(add(4));
             labbable.ready(add(5));
+
+            // Make sure 4 and 5 happen on the next tick
+            expect(order).to.equal([1,2,3]);
+
             labbable.ready((err, srv) => {
 
                 expect(err).to.not.exist();
@@ -238,7 +242,7 @@ describe('Labbable', () => {
         global.setTimeout = (fn, time) => {
 
             called.push(time);
-            setTimeout(fn, 1);
+            return setTimeout(fn, 1);
         };
 
         labbable.ready({ immediate: true }, (err, srv) => {
@@ -273,7 +277,7 @@ describe('Labbable', () => {
         global.setTimeout = (fn, time) => {
 
             called.push(time);
-            setTimeout(fn, 1);
+            return setTimeout(fn, 1);
         };
 
         let firstReadied = false;
@@ -295,7 +299,7 @@ describe('Labbable', () => {
 
     });
 
-    it('lets ready() timeout no-op once fulfilled.', (done) => {
+    it('does not call callback multiple times on using()-then-timeout.', (done) => {
 
         const server = new Hapi.Server();
         server.connection();
@@ -304,17 +308,44 @@ describe('Labbable', () => {
 
         setImmediate(() => labbable.using(server));
 
+        let called = 0;
+
         labbable.ready({ timeout: 10, immediate: true }, (err, srv) => {
 
+            called++;
+
+            expect(called).to.equal(1);
             expect(err).to.not.exist();
             expect(srv).to.shallow.equal(server);
-
-            // Let timeout complete and no-op
-            setTimeout(done, 15);
+            setTimeout(done, 20);
         });
 
     });
 
+    it('does not call callback multiple times on timeout-then-using().', (done) => {
+
+        const server = new Hapi.Server();
+        server.connection();
+
+        const labbable = new Labbable();
+
+        let called = 0;
+
+        labbable.ready({ timeout: 1, immediate: true }, (err, srv) => {
+
+            called++;
+
+            if (called === 1) {
+                labbable.using(server);
+            }
+
+            expect(called).to.equal(1);
+            expect(err).to.exist();
+            expect(srv).to.not.exist();
+            setTimeout(done, 10);
+        });
+
+    });
 
     it('ready() sans callback returns a promise that eventually resolves.', (done) => {
 
@@ -371,23 +402,6 @@ describe('Labbable', () => {
             done();
         });
 
-    });
-
-    it('using() throws when called multiple times.', (done) => {
-
-        const server = new Hapi.Server();
-        server.connection();
-
-        const labbable = new Labbable();
-
-        labbable.using(server);
-
-        expect(() => {
-
-            labbable.using(server);
-        }).to.throw('Can\'t call labbable.using(server) more than once.');
-
-        done();
     });
 
     it('using() throws when called multiple times.', (done) => {

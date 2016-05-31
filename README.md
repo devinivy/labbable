@@ -101,7 +101,7 @@ describe('My server', () => {
 ```
 
 ### With glue
-In this case the server is composed by **glue** then made available asynchronously, so it can't be exported as in the previous example.
+In this case the server is composed by **[glue](https://github.com/hapijs/glue)** then made available asynchronously, so it can't be exported as in the previous example.
 
 Instead we export an instance `lababble` of Labbable, then call `labbable.using(server)` as soon as the server is available.  The method `labbable.ready()`
  can then be used in a test to get a hold of `server` once it's initialized.
@@ -193,3 +193,40 @@ describe('My server', () => {
 
 });
 ```
+
+## API
+
+### `Labbable`
+The `Labbable` object is the container used to conveniently obtain a hapi server.
+
+#### `new Labbable([server])`
+Creates a new `Labbable` object.
+  - `server` - a hapi server.  When passed, the labbable instance is immediately made aware of `server`.
+
+#### `labbable.using(server)`
+  - `server` - a hapi server.  Makes the labbable instance aware of `server`.
+
+The labbable instance can be made aware of the hapi server as soon as possible.  If the labbable instance is already aware of a server, this will throw an error.
+
+#### `labbable.ready([options], [cb])`
+  - `options` - an optional object with the following,
+    - `immediate` - a boolean that when `true` passes along the `server` as soon as it is available to `labbable` (typically by calling `labbable.using(server)`).  By default, labbable will wait until the server is both available and also initialized.
+    - `timeout` - the number of milliseconds to wait (for the `server` to be made initialized and/or available) until a timeout error is raised.  When set to `0` or `false` no timeout will be set.  Defaults to `2000` (2 seconds).
+  - `cb` - a callback with the signature `cb(err, srv)`,
+    - `err` - an error (such as a timeout).
+    - `srv` - the hapi server instance that has been made initialized and/or available.
+
+When `cb` is not passed `labbable.ready()` returns a `Promise` that resolves with `srv` as described above, or rejects with `err` as described above.
+
+#### `labbable.isInitialized()`
+Returns `true` when `labbable` is aware of a hapi server (typically by calling `labbable.using(server)`) that has been initialized, and `false` otherwise.
+
+
+### `Labbable.plugin`
+This is a hapi plugin.  It gives the server two server decorations that provide identical functionality to ,
+
+#### `server.labbableReady([options], [cb])`
+This is identical to [`labbable.ready()`](labbablereadyoptions-cb), where the root server is already made available to `labbable`.
+
+#### `server.isInitialized()`
+Returns `true` if `server` is initialized and `false` otherwise.

@@ -4,7 +4,12 @@ No-fuss hapi server testing
 
 [![Build Status](https://travis-ci.org/devinivy/labbable.svg?branch=master)](https://travis-ci.org/devinivy/labbable) [![Coverage Status](https://coveralls.io/repos/devinivy/labbable/badge.svg?branch=master&service=github)](https://coveralls.io/github/devinivy/labbable?branch=master)
 
-It can be a pain to get your hapi server into your tests, especially when using otherwise wonderful tools such as **[glue](https://github.com/hapijs/glue)**.  Labbable makes this process very simple, and encourages the good practice of testing an initialized (but not started) hapi server.
+It can be a pain to get your hapi server into your tests, especially when using otherwise wonderful tools such as **[glue](https://github.com/hapijs/glue)**.  Labbable makes this process very simple, and encourages the best practice of testing an initialized (but not started) hapi server.
+
+##### Why initialize the server?
+Plugin dependencies are only enforced at the time of server initialization.  This means code that relies on a plugin being present (typically by the `after` callback of `server.dependency(deps, after)`) will only run during initialization.  And if there are any dependencies missing, those errors will surface only during initialization.  Your server's caches will also be started and `onPreStart` server extensions will run.
+
+Should you so desire, labbable can also pass an uninitialized server into your tests using options for [`labbable.ready()`](#labbablereadyoptions-cb).
 
 ## Usage
 

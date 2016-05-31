@@ -35,6 +35,8 @@ server.register([Labbable.plugin], (err) => {
         throw err;
     }
 
+    // Step 3.
+    // Initialize your server
     server.initialize((err) => {
 
         if (err) {
@@ -127,6 +129,8 @@ Glue.compose(manifest, (err, server) => {
     // Show the server to our instance of labbable
     labbable.using(server);
 
+    // Step 3.
+    // Initialize your server
     server.initialize((err) => {
 
         if (err) {
@@ -186,6 +190,8 @@ describe('My server', () => {
     // server is now available to be tested
     it('initializes.' (done) => {
 
+        expect(server).to.exist();
+
         // isInitialized() can be used to check the server's init state
         expect(LabbableServer.isInitialized()).to.equal(true);
         done();
@@ -206,7 +212,7 @@ Creates a new `Labbable` object.
 #### `labbable.using(server)`
   - `server` - a hapi server.  Makes the labbable instance aware of `server`.
 
-The labbable instance can be made aware of the hapi server as soon as possible.  If the labbable instance is already aware of a server, this will throw an error.
+The labbable instance should be made aware of the hapi server as soon as possible.  If the labbable instance is already aware of a server, this will throw an error.
 
 #### `labbable.ready([options], [cb])`
   - `options` - an optional object with the following,
@@ -223,10 +229,10 @@ Returns `true` when `labbable` is aware of a hapi server (typically by calling `
 
 
 ### `Labbable.plugin`
-This is a hapi plugin.  It gives the server two server decorations that provide identical functionality to ,
+This is a hapi plugin.  It gives the server two server decorations that provide identical functionality to [an instance of labbable](#new-labbableserver).
 
 #### `server.labbableReady([options], [cb])`
-This is identical to [`labbable.ready()`](labbablereadyoptions-cb), where the root server is already made available to `labbable`.
+This is identical to [`labbable.ready()`](#labbablereadyoptions-cb), where the root server is already made available to `labbable`.
 
 #### `server.isInitialized()`
 Returns `true` if `server` is initialized and `false` otherwise.

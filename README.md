@@ -66,7 +66,7 @@ server.register([Labbable.plugin], (err) => {
 ```js
 const Code = require('code');
 const Lab = require('lab');
-const MyServer = require('../server.js')
+const MyServer = require('../server.js');
 
 const lab = exports.lab = Lab.script();
 const describe = lab.describe;
@@ -92,7 +92,7 @@ describe('My server', () => {
     });
 
     // server is now available to be tested
-    it('initializes.' (done) => {
+    it('initializes.', (done) => {
 
         // server.isInitialized() can be used to check the server's init state
         expect(server.isInitialized()).to.equal(true);
@@ -188,7 +188,7 @@ describe('My server', () => {
     });
 
     // server is now available to be tested
-    it('initializes.' (done) => {
+    it('initializes.', (done) => {
 
         expect(server).to.exist();
 

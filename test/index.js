@@ -144,7 +144,7 @@ describe('Labbable', () => {
                 next();
             });
 
-            const labbable = new Labbable(server);
+            const labbable = new Labbable({ server });
             labbable.ready((err, srv) => {
 
                 expect(err).to.not.exist();
@@ -161,7 +161,7 @@ describe('Labbable', () => {
             const server = new Hapi.Server();
             server.connection();
 
-            const labbable = new Labbable(server);
+            const labbable = new Labbable({ server });
 
             setTimeout(() => server.initialize(() => {}), 20);
 
@@ -198,7 +198,7 @@ describe('Labbable', () => {
             const server = new Hapi.Server();
             server.connection();
 
-            const labbable = new Labbable(server);
+            const labbable = new Labbable({ server });
 
             labbable.ready({ immediate: true }, (err, srv) => {
 
@@ -223,6 +223,39 @@ describe('Labbable', () => {
                 expect(err).to.exist();
                 expect(err.message).to.equal('Labbable timed-out after 10ms.  Did you forget to call labbable.using(server)?');
                 expect(srv).to.not.exist();
+                done();
+            });
+
+        });
+
+        it('respects default timeout specified to the constructor.', (done, onCleanup) => {
+
+            const server = new Hapi.Server();
+            server.connection();
+
+            const labbable = new Labbable({ defaultTimeout: 1000 });
+
+            const setTimeout = global.setTimeout;
+            onCleanup((next) => {
+
+                global.setTimeout = setTimeout;
+                next();
+            });
+
+            const called = [];
+            global.setTimeout = (fn, time) => {
+
+                called.push(time);
+                return setTimeout(fn, 1);
+            };
+
+            labbable.ready({ immediate: true }, (err, srv) => {
+
+                expect(err).to.exist();
+                expect(err.message).to.equal('Labbable timed-out after 1000ms.  Did you forget to call labbable.using(server)?');
+                expect(srv).to.not.exist();
+                expect(called.length).to.equal(1);
+                expect(called[0]).to.equal(1000);
                 done();
             });
 
@@ -375,7 +408,7 @@ describe('Labbable', () => {
             const server = new Hapi.Server();
             server.connection();
 
-            const labbable = new Labbable(server);
+            const labbable = new Labbable({ server });
 
             labbable.ready({ immediate: true })
             .then((srv) => {

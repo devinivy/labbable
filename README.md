@@ -58,7 +58,6 @@ server.register([Labbable.plugin], (err) => {
             console.log('Server started');
         });
     });
-
 });
 ```
 
@@ -98,7 +97,6 @@ describe('My server', () => {
         expect(server.isInitialized()).to.equal(true);
         done();
     });
-
 });
 ```
 
@@ -152,7 +150,6 @@ Glue.compose(manifest, (err, server) => {
             console.log('Server started');
         });
     });
-
 });
 ```
 
@@ -196,7 +193,6 @@ describe('My server', () => {
         expect(LabbableServer.isInitialized()).to.equal(true);
         done();
     });
-
 });
 ```
 
@@ -219,7 +215,7 @@ The labbable instance should be made aware of the hapi server as soon as possibl
 #### `labbable.ready([options], [cb])`
   - `options` - an optional object with the following,
     - `immediate` - a boolean that when `true` passes along the `server` as soon as it is available to `labbable` (typically by calling `labbable.using(server)`).  By default, labbable will wait until the server is both available and also initialized.
-    - `timeout` - a number in milliseconds, to override the `defaultTimeout` option specified in the constructor. 
+    - `timeout` - a number in milliseconds, to override the `defaultTimeout` option specified in the constructor.
   - `cb` - a callback with the signature `cb(err, srv)`,
     - `err` - an error (such as a timeout).
     - `srv` - the hapi server instance that has been made initialized and/or available.

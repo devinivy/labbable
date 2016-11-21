@@ -47,11 +47,6 @@ describe('Labbable', () => {
             server.connection();
 
             let init = false;
-            server.ext('onPreStart', (srv, next) => {
-
-                init = true;
-                next();
-            });
 
             const labbable = new Labbable();
             labbable.using(server);
@@ -63,7 +58,14 @@ describe('Labbable', () => {
                 done();
             });
 
-            server.initialize((err) => err && done(err));
+            server.initialize((err) => {
+
+                if (err) {
+                    return done(err);
+                }
+
+                init = true;
+            });
         });
 
         it('hands-off server that was already initialized.', (done) => {
@@ -111,22 +113,27 @@ describe('Labbable', () => {
             labbable.ready(add(2));
             labbable.ready(add(3));
 
+            expect(order).to.equal([]);
+
             server.initialize((err) => {
 
                 expect(err).to.not.exist();
 
-                labbable.ready(add(4));
-                labbable.ready(add(5));
+                setImmediate(() => {
 
-                // Make sure 4 and 5 happen on the next tick
-                expect(order).to.equal([1,2,3]);
+                    labbable.ready(add(4));
+                    labbable.ready(add(5));
 
-                labbable.ready((err, srv) => {
+                    // Make sure 4 and 5 happen on the next tick
+                    expect(order).to.equal([1,2,3]);
 
-                    expect(err).to.not.exist();
-                    expect(srv).to.shallow.equal(server);
-                    expect(order).to.equal([1,2,3,4,5]);
-                    done();
+                    labbable.ready((err, srv) => {
+
+                        expect(err).to.not.exist();
+                        expect(srv).to.shallow.equal(server);
+                        expect(order).to.equal([1,2,3,4,5]);
+                        done();
+                    });
                 });
             });
 
@@ -138,11 +145,6 @@ describe('Labbable', () => {
             server.connection();
 
             let init = false;
-            server.ext('onPreStart', (srv, next) => {
-
-                init = true;
-                next();
-            });
 
             const labbable = new Labbable({ server });
             labbable.ready((err, srv) => {
@@ -153,7 +155,14 @@ describe('Labbable', () => {
                 done();
             });
 
-            server.initialize((err) => err && done(err));
+            server.initialize((err) => {
+
+                if (err) {
+                    return done(err);
+                }
+
+                init = true;
+            });
         });
 
         it('respects timeout specified in options (waiting for init).', (done) => {
@@ -486,7 +495,5 @@ describe('Labbable', () => {
                 done();
             });
         });
-
     });
-
 });

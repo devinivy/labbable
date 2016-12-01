@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/devinivy/labbable#readme",
   "peerDependencies": {
-    "hapi": ">=10 <=16"
+    "hapi": ">=10 <=17"
   },
   "devDependencies": {
     "code": "3.x.x",

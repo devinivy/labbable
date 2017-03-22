@@ -69,6 +69,7 @@ const MyServer = require('../server.js');
 
 const lab = exports.lab = Lab.script();
 const describe = lab.describe;
+const before = lab.before;
 const it = lab.it;
 const expect = Code.expect;
 

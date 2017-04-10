@@ -34,6 +34,6 @@
     "code": "4.x.x",
     "coveralls": "2.x.x",
     "hapi": "16.x.x",
-    "lab": "11.x.x"
+    "lab": "13.x.x"
   }
 }

@@ -4,10 +4,14 @@ No-fuss hapi server testing
 
 [![Build Status](https://travis-ci.org/devinivy/labbable.svg?branch=master)](https://travis-ci.org/devinivy/labbable) [![Coverage Status](https://coveralls.io/repos/devinivy/labbable/badge.svg?branch=master&service=github)](https://coveralls.io/github/devinivy/labbable?branch=master)
 
+Lead Maintainer — [Devin Ivy](https://github.com/devinivy)
+
+## Introduction
+
 It can be a pain to get your hapi server into your tests, especially when using otherwise wonderful tools such as **[glue](https://github.com/hapijs/glue)**.  Labbable makes this process very simple, and encourages the best practice of testing an initialized (but not started) hapi server.
 
 ##### Why initialize the server for tests?
-Plugin dependencies are only enforced at the time of [server initialization](https://github.com/hapijs/hapi/blob/master/API.md#serverinitializecallback).  This means code that relies on a plugin being present (typically by the `after` callback of [`server.dependency(deps, after)`](https://github.com/hapijs/hapi/blob/master/API.md#serverdependencydependencies-after)) will only run during initialization.  And if there are any dependencies missing, those errors will surface only during initialization.  Your server's caches will also be started and `onPreStart` server extensions will run.
+Plugin dependencies are only enforced at the time of [server initialization](https://github.com/hapijs/hapi/blob/v16/API.md#serverinitializecallback).  This means code that relies on a plugin being present (typically by the `after` callback of [`server.dependency(deps, after)`](https://github.com/hapijs/hapi/blob/v16/API.md#serverdependencydependencies-after) will only run during initialization.  And if there are any dependencies missing, those errors will surface only during initialization.  Your server's caches will also be started and `onPreStart` server extensions will run.
 
 Should you so desire, labbable can also pass an uninitialized server into your tests using options for [`labbable.ready()`](#labbablereadyoptions-cb).
 
@@ -197,42 +201,3 @@ describe('My server', () => {
     });
 });
 ```
-
-## API
-
-### `Labbable`
-The `Labbable` object is the container used to conveniently obtain a hapi server.
-
-#### `new Labbable([options])`
-Creates a new `Labbable` object.
-  - `options` - an optional object with the following,
-    - `server` - a hapi server.  When passed, the labbable instance is immediately made aware of `server`.
-    - `defaultTimeout` - the number of milliseconds to wait (for the `server` to be made initialized and/or available) until a timeout error is raised.  When set to `0` or `false` no timeout will be set. Defaults to `2000` (2 seconds).
-
-#### `labbable.using(server)`
-  - `server` - a hapi server.  Makes the labbable instance aware of `server`.
-
-The labbable instance should be made aware of the hapi server as soon as possible.  If the labbable instance is already aware of a server, this will throw an error.
-
-#### `labbable.ready([options], [cb])`
-  - `options` - an optional object with the following,
-    - `immediate` - a boolean that when `true` passes along the `server` as soon as it is available to `labbable` (typically by calling `labbable.using(server)`).  By default, labbable will wait until the server is both available and also initialized.
-    - `timeout` - a number in milliseconds, to override the `defaultTimeout` option specified in the constructor.
-  - `cb` - a callback with the signature `cb(err, srv)`,
-    - `err` - an error (such as a timeout).
-    - `srv` - the hapi server instance that has been made initialized and/or available.
-
-When `cb` is not passed `labbable.ready()` returns a `Promise` that resolves with `srv` as described above, or rejects with `err` as described above.
-
-#### `labbable.isInitialized()`
-Returns `true` when `labbable` is aware of a hapi server (typically by calling `labbable.using(server)`) that has been initialized, and `false` otherwise.
-
-
-### `Labbable.plugin`
-This is a hapi plugin.  It gives the server two server decorations that provide identical functionality to [an instance of labbable](#new-labbableserver).
-
-#### `server.labbableReady([options], [cb])`
-This is identical to [`labbable.ready()`](#labbablereadyoptions-cb), where the root server is already made available to `labbable`.
-
-#### `server.isInitialized()`
-Returns `true` if `server` is initialized and `false` otherwise.

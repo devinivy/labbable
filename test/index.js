@@ -403,12 +403,12 @@ describe('Labbable', () => {
             setImmediate(() => labbable.using(server));
 
             labbable.ready({ immediate: true })
-            .then((srv) => {
+                .then((srv) => {
 
-                expect(srv).to.shallow.equal(server);
-                done();
-            })
-            .catch(done);
+                    expect(srv).to.shallow.equal(server);
+                    done();
+                })
+                .catch(done);
 
         });
 
@@ -420,12 +420,12 @@ describe('Labbable', () => {
             const labbable = new Labbable({ server });
 
             labbable.ready({ immediate: true })
-            .then((srv) => {
+                .then((srv) => {
 
-                expect(srv).to.shallow.equal(server);
-                done();
-            })
-            .catch(done);
+                    expect(srv).to.shallow.equal(server);
+                    done();
+                })
+                .catch(done);
 
         });
 
@@ -437,16 +437,16 @@ describe('Labbable', () => {
             const labbable = new Labbable();
 
             labbable.ready({ timeout: 1, immediate: true })
-            .then(() => {
+                .then(() => {
 
-                done(new Error('Shouldn\'t make it here.'));
-            })
-            .catch((err) => {
+                    done(new Error('Shouldn\'t make it here.'));
+                })
+                .catch((err) => {
 
-                expect(err).to.exist();
-                expect(err.message).to.equal('Labbable timed-out after 1ms.  Did you forget to call labbable.using(server)?');
-                done();
-            });
+                    expect(err).to.exist();
+                    expect(err.message).to.equal('Labbable timed-out after 1ms.  Did you forget to call labbable.using(server)?');
+                    done();
+                });
 
         });
 

@@ -16,6 +16,7 @@ Plugin dependencies are only enforced at the time of [server initialization](htt
 Should you so desire, labbable can also pass an uninitialized server into your tests using options for [`labbable.ready()`](#labbablereadyoptions-cb).
 
 ## Usage
+> See also the [API Reference](API.md)
 
 ### Directly (as plugin)
 In this case the server is immediately available and can be placed in `module.exports`.  Registering the `Labbable.plugin` hapi plugin adds a server decoration `server.labbableReady()` that can be used in a test to guarantee the server is initialized.

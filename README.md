@@ -4,7 +4,64 @@ No-fuss hapi server testing
 
 [![Build Status](https://travis-ci.org/devinivy/labbable.svg?branch=master)](https://travis-ci.org/devinivy/labbable) [![Coverage Status](https://coveralls.io/repos/devinivy/labbable/badge.svg?branch=master&service=github)](https://coveralls.io/github/devinivy/labbable?branch=master)
 
-Lead Maintainer — [Devin Ivy](https://github.com/devinivy)
+Lead Maintainer - [Devin Ivy](https://github.com/devinivy)
+
+> **Note**
+>
+> Under **hapi v17+** and `async`/`await`, labbable no longer provides much utility and is deprecated until any further needs arise surrounding hapi testing.  It is suggested that your server entrypoint export a function that asynchronously returns a hapi server and starts/initializes the server as is appropriate.  For a full-fledged example, see [this server](https://github.com/devinivy/boilerplate-api/blob/pal/server/index.js) and [this corresponding test](https://github.com/devinivy/boilerplate-api/blob/pal/test/index.js).
+>
+> Here is a simple example just for illustrative purposes.
+>
+> #### `server.js`
+```js
+const Hapi = require('hapi');
+
+exports.deployment = async (start) => {
+
+    const server = Hapi.server();
+
+    await server.initialize();
+
+    if (!start) {
+        return server;
+    }
+
+    await server.start();
+
+    console.log('Server started');
+
+    return server;
+};
+
+if (!module.parent) {
+    exports.deployment(true).catch(console.error);
+}
+```
+
+> #### `test/index.js`
+```js
+
+// Load modules
+
+const Code = require('code');
+const Lab = require('lab');
+const Server = require('../server');
+
+// Test shortcuts
+
+const { describe, it } = exports.lab = Lab.script();
+const { expect } = Code;
+
+describe('Deployment', () => {
+
+    it('returns a server.', async () => {
+
+        const server = await Server.deployment();
+
+        expect(server.route).to.be.a.function();
+    });
+});
+```
 
 ## Introduction
 

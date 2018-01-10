@@ -8,12 +8,14 @@ Lead Maintainer - [Devin Ivy](https://github.com/devinivy)
 
 > **Note**
 >
-> Under **hapi v17+** and `async`/`await`, labbable no longer provides much utility and is deprecated until any further needs arise surrounding hapi testing.  It is suggested that your server entrypoint exports a function that asynchronously returns a hapi server and starts/initializes the server as is appropriate.  For a full-fledged example, see [this server](https://github.com/devinivy/boilerplate-api/blob/pal/server/index.js) and [this corresponding test](https://github.com/devinivy/boilerplate-api/blob/pal/test/index.js).
+> Under **hapi v17+** and `async`/`await`, labbable no longer provides much utility and is deprecated until any further needs arise surrounding hapi testing.  It is suggested that your server entrypoint export a function that asynchronously returns a hapi server and starts/initializes the server as is appropriate.  For a full-fledged example, see [this server](https://github.com/devinivy/boilerplate-api/blob/pal/server/index.js) and [this corresponding test](https://github.com/devinivy/boilerplate-api/blob/pal/test/index.js).
 >
 > Here is a simple example just for illustrative purposes.
 >
 > #### `server.js`
 ```js
+const Hapi = require('hapi');
+
 exports.deployment = async (start) => {
 
     const server = Hapi.server();
@@ -43,6 +45,7 @@ if (!module.parent) {
 
 const Code = require('code');
 const Lab = require('lab');
+const Server = require('../server');
 
 // Test shortcuts
 
